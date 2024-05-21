@@ -1,0 +1,25 @@
+[flake8]
+max-line-length = 160
+inline-quotes = "
+# " # double quote " is the correct value for `inline-quotes` param 
+extend-ignore = 
+    E203,
+    E402,    
+    E722,
+    E731,
+    # F401,
+    F403,
+    F405,
+    Q000
+    B008
+    INP001
+exclude =
+    venv/
+    .venv/
+    env/
+    .env/
+
+per-file-ignores =
+    src/rebind/copilot/api/services/prompts/chat_prompts.py:E501
+    src/rebind/copilot/api/routers/ChatRouter.py:E501
+    src/rebind/copilot/api/routers/BookRouter.py:E501

@@ -23,8 +23,9 @@ async def selecting_quiz(message: telebot.types.Message):
     if quiz:
         await bot.set_state(message.from_user.id, QuizStates.accepting_quiz, message.chat.id)
         await bot.reply_to(
-            message, f"You selected: {quiz.title}\n{quiz.description}\nDo you want to start?",
-            reply_markup=markups.confirmation_markup()
+            message,
+            f"You selected: {quiz.title}\n{quiz.description}\nDo you want to start?",
+            reply_markup=markups.confirmation_markup(),
         )
     else:
         quizzes = Orm.Quiz.get_all_quizzes()
@@ -35,7 +36,7 @@ async def selecting_quiz(message: telebot.types.Message):
 
 @bot.message_handler(state=QuizStates.accepting_quiz)
 async def accepting_quiz(message: telebot.types.Message):
-    if message.text.lower().strip() == 'yes':
+    if message.text.lower().strip() == "yes":
         previous_message = Orm.Message.get_last_message(message.from_user.id)
         quiz = Orm.Quiz.get_quiz_by_title(previous_message.message_text)
         if quiz:
@@ -73,7 +74,9 @@ async def ongoing_quiz(message: telebot.types.Message):
             else:
                 await bot.set_state(user_id, QuizStates.results, chat_id)
                 Orm.UserQuizProgress.complete_user_quiz(user_id)
-                await bot.reply_to(chat_id, "Quiz completed! Thank you for participating.", reply_markup=markups.result_markup())
+                await bot.reply_to(
+                    chat_id, "Quiz completed! Thank you for participating.", reply_markup=markups.result_markup()
+                )
         else:
             await bot.reply_to(chat_id, "Invalid answer. Please try again.")
     else:

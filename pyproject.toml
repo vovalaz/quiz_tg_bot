@@ -1,0 +1,57 @@
+####################################################################################################
+[tool.black]
+line-length = 120
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | .pytest_cache
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+  | media
+  | mediafiles
+  | templates
+  | static
+  | staticfiles
+  | venv
+  | env
+  | .env
+  | .venv
+)/
+'''
+
+####################################################################################################
+[tool.isort]
+profile = "black"
+line_length = 120
+src_paths=["src"]
+skip=[".gitignore", "static", "media", "mediafiles", "venv", "env", ".venv", ".env"]
+no_lines_before=["LOCALFOLDER"]
+
+####################################################################################################
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning"
+]
+
+log_cli = true
+log_cli_level = 30
+# NOTSET=0, DEBUG=10, INFO=20, WARN=30, ERROR=40, and CRITICAL=50
+
+log_file = "pytest.log"
+log_file_level = "INFO"
+
+# addopts = "--show-capture=no"
+addopts = "--show-capture=all"
+
+asyncio_mode = "auto"
+
+####################################################################################################

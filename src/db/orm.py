@@ -1,9 +1,16 @@
 from sqlalchemy.orm import Session, sessionmaker
 
 from db.database import engine
-from db.managers import (AnswerManager, MessageManager, QuestionManager,
-                         QuizManager, StatisticsManager, UserAnswerManager,
-                         UserInfoManager, UserQuizProgressManager)
+from db.managers import (
+    AnswerManager,
+    MessageManager,
+    QuestionManager,
+    QuizManager,
+    StatisticsManager,
+    UserAnswerManager,
+    UserInfoManager,
+    UserQuizProgressManager,
+)
 
 DBSession = sessionmaker(bind=engine)
 

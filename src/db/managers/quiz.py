@@ -1,7 +1,8 @@
 from typing import Any
+
 from sqlalchemy.orm import Session
 
-from db.models import Quiz, Question, Answer
+from db.models import Answer, Question, Quiz
 
 
 class QuizManager:
@@ -32,12 +33,16 @@ class QuizManager:
         self.session.commit()
 
         for question_data in questions_data:
-            question = Question(quiz_id=quiz.id, question_text=question_data['question_text'])
+            question = Question(quiz_id=quiz.id, question_text=question_data["question_text"])
             self.session.add(question)
             self.session.commit()
 
-            for answer_data in question_data['answers']:
-                answer = Answer(question_id=question.id, answer_text=answer_data['answer_text'], is_correct=answer_data['is_correct'])
+            for answer_data in question_data["answers"]:
+                answer = Answer(
+                    question_id=question.id,
+                    answer_text=answer_data["answer_text"],
+                    is_correct=answer_data["is_correct"],
+                )
                 self.session.add(answer)
 
         self.session.commit()

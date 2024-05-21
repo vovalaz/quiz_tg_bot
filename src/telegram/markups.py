@@ -1,4 +1,5 @@
 import telebot
+
 from db.models import Quiz
 
 
