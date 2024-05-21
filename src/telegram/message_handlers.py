@@ -75,7 +75,7 @@ async def ongoing_quiz(message: telebot.types.Message):
                 await bot.set_state(user_id, QuizStates.results, chat_id)
                 Orm.UserQuizProgress.complete_user_quiz(user_id)
                 await bot.reply_to(
-                    chat_id, "Quiz completed! Thank you for participating.", reply_markup=markups.result_markup()
+                    message, "Quiz completed! Thank you for participating.", reply_markup=markups.result_markup()
                 )
         else:
             await bot.reply_to(chat_id, "Invalid answer. Please try again.")
@@ -92,3 +92,46 @@ async def send_next_question(user_id, chat_id):
     for answer in answers:
         markup.add(answer.answer_text)
     await bot.send_message(chat_id, question.question_text, reply_markup=markup)
+
+
+@bot.message_handler(state=QuizStates.results)
+async def list_statistics(message: telebot.types.Message):
+    user_id = message.from_user.id
+    user_statistics = Orm.Statistics.get_user_statistics(user_id)
+    if user_statistics:
+        markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True)
+        for stat in user_statistics:
+            quiz = Orm.Quiz.get_quiz_by_id(stat.quiz_id)
+            markup.add(f"{quiz.title}: {stat.score}/{stat.max_score}")
+
+        markup.row("/restart")
+        await bot.set_state(user_id, QuizStates.choosing_statistic, message.chat.id)
+        await bot.reply_to(message, "Select a quiz result to view details:", reply_markup=markup)
+    else:
+        await bot.reply_to(message, "No quiz results found.")
+
+
+@bot.message_handler(state=QuizStates.choosing_statistic)
+async def choose_statistic(message: telebot.types.Message):
+    user_id = message.from_user.id
+    text = message.text.split(":")[0]
+    quiz_title = text.strip()
+    quiz = Orm.Quiz.get_quiz_by_title(quiz_title)
+
+    stat = Orm.Statistics.get_statistics_by_quiz_id_user_id(quiz.id, user_id)
+    if stat:
+        await bot.set_state(user_id, QuizStates.results, message.chat.id)
+        await bot.reply_to(
+            message,
+            f"Quiz ID: {stat.quiz_id}\n"
+            f"Score: {stat.score}/{stat.max_score}\n"
+            f"Completion Time: {stat.completion_time} seconds\n"
+            f"Completed At: {stat.completed_at}",
+            reply_markup=markups.back_to_results_markup(),
+        )
+    else:
+        await bot.reply_to(
+            message,
+            "Invalid selection. Please choose a valid quiz result.",
+            reply_markup=markups.back_to_results_markup(),
+        )

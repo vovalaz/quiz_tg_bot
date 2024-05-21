@@ -6,3 +6,4 @@ class QuizStates(StatesGroup):
     accepting_quiz = State()
     ongoing_quiz = State()
     results = State()
+    choosing_statistic = State()

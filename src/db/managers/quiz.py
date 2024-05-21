@@ -12,6 +12,9 @@ class QuizManager:
     def get_quiz_by_title(self, title) -> Quiz:
         return self.session.query(Quiz).filter_by(title=title).first()
 
+    def get_quiz_by_id(self, id) -> Quiz:
+        return self.session.query(Quiz).filter_by(id=id).first()
+
     def create_quiz(self, title: str, description: str, questions_data: list[dict[str, Any]]):
         """
         Example:

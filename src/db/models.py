@@ -94,7 +94,7 @@ class UserQuizProgress(Base):
     user_id = Column(Integer, ForeignKey("userinfo.user_id"))
     quiz_id = Column(Integer, ForeignKey("quiz.id"))
     current_question_id = Column(Integer, ForeignKey("question.id"))
-    started_at = Column(DateTime, default=datetime.utcnow)
+    started_at = Column(DateTime, default=datetime.now)
 
     user = relationship("UserInfo")
     quiz = relationship("Quiz")
